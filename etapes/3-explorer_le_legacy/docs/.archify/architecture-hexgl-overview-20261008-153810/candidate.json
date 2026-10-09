@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Architecture HexGL",
+    "subtitle": "Vue d'ensemble : jeu client-side, sans backend",
+    "output": ".archify/architecture-hexgl-overview-20261008-153810/hexgl-architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/wanegain3/cc-tp-hexgl-BEAUGRAND.git",
+      "provider": "github",
+      "revision": "d7e2c2cc01e5ac7ad3ef9f7ec010c222029811b5"
+    }
+  },
+  "components": [
+    { "id": "push_trigger", "type": "external", "label": "Push / Pull Request", "sublabel": "dépôt Git", "pos": [220, 30], "size": [220, 70] },
+    { "id": "ci", "type": "cloud", "label": "CI — Tests", "sublabel": "GitHub Actions", "pos": [380, 160], "size": [220, 70], "sources": [{ "path": ".github/workflows/ci.yml", "line": 1, "end_line": 20, "label": "workflow ci.yml" }] },
+    { "id": "cd", "type": "cloud", "label": "CD — Déploiement", "sublabel": "GitHub Actions", "pos": [60, 160], "size": [220, 70], "sources": [{ "path": ".github/workflows/cd.yml", "line": 1, "end_line": 32, "label": "workflow cd.yml" }] },
+    { "id": "pages", "type": "cloud", "label": "GitHub Pages", "sublabel": "hébergement statique", "pos": [60, 290], "size": [220, 70] },
+
+    { "id": "ui_menu", "type": "frontend", "label": "Menu & Réglages", "sublabel": "index.html + launch.js", "pos": [60, 430], "size": [220, 70], "sources": [{ "path": "HexGL/index.html", "line": 46, "end_line": 61, "label": "DOM du menu" }, { "path": "HexGL/launch.coffee", "line": 1, "end_line": 85, "label": "logique du menu" }] },
+    { "id": "analytics", "type": "external", "label": "Google Analytics", "sublabel": "ga.js (pageview)", "pos": [380, 430], "size": [220, 70] },
+
+    { "id": "loader", "type": "backend", "label": "Chargement des assets", "sublabel": "bkcore.threejs.Loader", "pos": [60, 570], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore/threejs/Loader.js", "line": 22, "label": "Loader()" }] },
+    { "id": "threejs_webgl", "type": "external", "label": "Three.js (vendoré)", "sublabel": "rendu WebGL", "pos": [380, 600], "size": [220, 60] },
+
+    { "id": "hexgl_orchestrator", "type": "backend", "label": "Orchestrateur de jeu", "sublabel": "bkcore.hexgl.HexGL", "pos": [60, 710], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore/hexgl/HexGL.js", "line": 14, "label": "HexGL() : init/boucle" }] },
+    { "id": "render_presentation", "type": "backend", "label": "Rendu & présentation", "sublabel": "Cityscape, RenderManager, HUD, CameraChase, Audio", "tag": "Web Audio API", "pos": [380, 710], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore/hexgl/tracks/Cityscape.js", "line": 334, "label": "buildScenes()" }, { "path": "HexGL/bkcore/threejs/RenderManager.js", "line": 65, "label": "RenderManager()" }, { "path": "HexGL/bkcore/hexgl/HUD.js", "line": 11, "label": "HUD()" }] },
+
+    { "id": "gameplay_physics", "type": "backend", "label": "Gameplay & Physique", "sublabel": "Gameplay + ShipControls", "pos": [60, 850], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore/hexgl/Gameplay.js", "line": 11, "label": "Gameplay()" }, { "path": "HexGL/bkcore/hexgl/ShipControls.js", "line": 11, "label": "ShipControls()" }] },
+    { "id": "legacy_utils", "type": "backend", "label": "Utilitaires legacy", "sublabel": "Timer, ImageData, Utils (CoffeeScript)", "tag": "contrôleurs", "pos": [380, 850], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore.coffee/Utils.coffee", "line": 1, "end_line": 192, "label": "Utils" }, { "path": "HexGL/bkcore.coffee/controllers/TouchController.coffee", "line": 1, "end_line": 108, "label": "contrôleurs" }] },
+
+    { "id": "score_screen", "type": "frontend", "label": "Écran de score", "sublabel": "displayScore + #step-5", "tag": "localStorage", "pos": [60, 1030], "size": [220, 70], "sources": [{ "path": "HexGL/bkcore/hexgl/HexGL.js", "line": 181, "label": "displayScore()" }, { "path": "HexGL/index.html", "line": 72, "end_line": 75, "label": "DOM #step-5" }] },
+    { "id": "social_share", "type": "external", "label": "Twitter / Facebook", "sublabel": "liens de partage", "pos": [380, 1030], "size": [220, 70] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Pipeline CI/CD (GitHub Actions)", "wraps": ["ci", "cd"] },
+    { "kind": "region", "label": "Application HexGL (code du jeu, dans le navigateur)", "wraps": ["ui_menu", "loader", "hexgl_orchestrator", "gameplay_physics", "score_screen"] }
+  ],
+  "connections": [
+    { "id": "push-to-ci", "from": "push_trigger", "to": "ci", "label": "push/PR", "variant": "dashed" },
+    { "id": "push-to-cd", "from": "push_trigger", "to": "cd", "label": "push main", "variant": "dashed" },
+    { "id": "cd-to-pages", "from": "cd", "to": "pages", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+    { "id": "pages-to-ui", "from": "pages", "to": "ui_menu", "variant": "dashed", "fromSide": "bottom", "toSide": "top" },
+
+    { "id": "ui-to-loader", "from": "ui_menu", "to": "loader", "label": "Start", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "loader-to-hexgl", "from": "loader", "to": "hexgl_orchestrator", "label": "init", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "hexgl-to-gameplay", "from": "hexgl_orchestrator", "to": "gameplay_physics", "label": "update", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "gameplay-to-score", "from": "gameplay_physics", "to": "score_screen", "label": "fin de course", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+
+    { "id": "hexgl-to-render", "from": "hexgl_orchestrator", "to": "render_presentation", "label": "render", "fromSide": "right", "toSide": "left" },
+    { "id": "threejs-to-hexgl", "from": "threejs_webgl", "to": "hexgl_orchestrator", "label": "WebGL" },
+    { "id": "legacy-to-gameplay", "from": "legacy_utils", "to": "gameplay_physics", "label": "Timer", "fromSide": "left", "toSide": "right" },
+    { "id": "score-to-share", "from": "score_screen", "to": "social_share", "label": "partage", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "ui-to-analytics", "from": "ui_menu", "to": "analytics", "label": "tracking", "variant": "dashed", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Flux principal", "items": ["Menu → vérification WebGL → chargement des assets (barre de progression)", "Scène construite (Cityscape) → boucle de jeu : update() + rendu à chaque frame", "Fin de course → écran de score, meilleur score local, partage"] },
+    { "dot": "amber", "title": "Dépendances externes", "items": ["Three.js vendoré (rendu WebGL, post-processing)", "Web Audio API avec repli <audio>", "Clavier, tactile, gyroscope, manette, Leap Motion", "Google Analytics, Twitter/Facebook, localStorage"] },
+    { "dot": "slate", "title": "Frontières", "items": ["Application HexGL : runtime 100% navigateur, aucun backend ni base de données", "Pipeline CI (tests) et CD (déploiement), déclenché par un push, séparé du runtime", "Hébergement statique GitHub Pages : sert le jeu et ses assets"] }
+  ]
+}
