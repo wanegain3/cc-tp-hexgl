@@ -53,6 +53,7 @@ Contraintes :
 2. Indique clairement les tests réussis, échoués ou impossibles à exécuter.
 3. Documente la commande de test et l’emplacement des éventuelles captures dans `CLAUDE.md` pour future réutilisation
 4. Explique brièvement ce que chaque nouveau test protège.
+5. Si les tests réussissent, crée un commit local des modifications de documentation et de tests, sans push.
 ```
 
 Cf. /A3-figer-les-comportements pour un exemple des nouveaux tests et des captures, ainsi que le claude.md
@@ -64,7 +65,7 @@ git status
 ```
 
 ```text
-git switch -c refactor/company-event
+git switch -c 001-company-event-acme
 ```
 
 ```text
@@ -91,7 +92,7 @@ Avant de rédiger la spec :
 - ne redemande pas ce qui est déjà explicite dans les documents
 - ne détaille pas encore le plan d’implémentation ni les fichiers à modifier
 
-Une fois les points nécessaires clarifiés, génère : work/company-event/spec.md avec :
+Une fois les points nécessaires clarifiés, génère : work/001-company-event-acme/spec.md avec :
 - Contexte et objectif
 - Exigences fonctionnelles
 - Comportements attendus
@@ -107,7 +108,7 @@ Ne modifie aucun code.
 ```
 Review : 
 ```text
-Relis @work/company-event/spec.md comme reviewer produit.
+Relis @work/001-company-event-acme/spec.md comme reviewer produit.
 Signale uniquement :
 - les ambiguïtés restantes
 - les exigences non vérifiables
@@ -123,7 +124,7 @@ Cf. /B2-B3-spec pour une exemple de specification fonctionnelle
 
 En mode plan :
 ```text
-À partir de @work/company-event/spec.md et de @docs/architecture.md, propose l’approche technique minimale pour implémenter le changement dans cette codebase legacy.
+À partir de @work/001-company-event-acme/spec.md et de @docs/architecture.md, propose l’approche technique minimale pour implémenter le changement dans cette codebase legacy.
 
 Contraintes :
 - pour lancer le jeu, privilégier une commande compatible avec l'environnement disponible (Python 3, PHP, etc.), sans supposer la présence de Node.js.
@@ -144,10 +145,10 @@ Structure le plan avec :
 - décisions techniques principales
 - risques et compatibilité
 - stratégie de tests et de vérification
-- plan d’implémentation en 3 à 5 petites étapes
+- plan d’implémentation en 3 petites étapes
 
 Ne code rien.
-Si je valide le plan, enregistre-le dans work/company-event/plan.md mais ne l’implémente pas.
+Si je valide le plan, enregistre-le dans work/001-company-event-acme/plan.md sans l’implémenter.
 ```
 
 Cf. /B4-B5-plan pour une exemple de plan.md
@@ -159,7 +160,7 @@ Cf. /B6-build pour les captures d'écran de chaque étape
 ### ETAPE 1 : 
 
 ```text
-Implémente uniquement l’étape 1 du plan d’implémentation de @work/company-event/plan.md.
+Implémente uniquement l’étape 1 du plan d’implémentation de @work/001-company-event-acme/plan.md.
 Respecte exactement le plan validé et les contraintes propres à cette étape.
 Règles :
 - N’anticipe pas les étapes suivantes.
@@ -180,7 +181,7 @@ Ne commence pas l’étape suivante.
 ```text
 L’étape précédente est validée.
 
-Implémente uniquement l’étape suivante du plan d’implémentation de @work/company-event/plan.md.
+Implémente uniquement l’étape suivante du plan d’implémentation de @work/001-company-event-acme/plan.md.
 
 Respecte exactement le plan validé et les contraintes propres à cette étape.
 
@@ -208,7 +209,7 @@ Ne commence pas l’étape suivante.
 puis :
 
 ```text
-Vérifie l'implémentation par rapport aux critères d'acceptation de @work/company-event/spec.md.
+Vérifie l'implémentation par rapport aux critères d'acceptation de @work/001-company-event-acme/spec.md.
 Relance les tests documentés dans `CLAUDE.md`. Vérifie également le rendu et les interactions dans le navigateur si les outils disponibles le permettent, en utilisant les captures de référence. Sinon, précise les contrôles manuels restant à effectuer.
 Pour chaque critère, indique :
 - PASS, FAIL ou INCONCLUSIVE ;
@@ -222,7 +223,7 @@ Ne modifie rien pendant cette vérification et n'effectue aucun commit.
 
 
 ```text
-Analyse @work/company-event/spec.md, @work/company-event/plan.md et le diff actuel. 
+Analyse @work/001-company-event-acme/spec.md, @work/001-company-event-acme/plan.md et le diff actuel. 
 Identifie les informations durables qui doivent être répercutées dans docs/architecture.md : changements d’architecture, nouvelles commandes, contraintes, pièges importants et décisions techniques durables.
 Propose uniquement les mises à jour nécessaires.
 Ne supprime ni spec.md ni plan.md.
@@ -233,7 +234,7 @@ puis :
 ```text
 Applique les mises à jour validées à @docs/architecture.md.
 Supprime uniquement les fichiers temporaires devenus inutiles.
-Conserve work/company-event/spec.md et work/company-event/plan.md, les tests QUnit, CLAUDE.md et les captures de référence dans formation/tests/captures/.
+Conserve @work/001-company-event-acme/spec.md et @work/001-company-event-acme/plan.md, les tests QUnit, CLAUDE.md et les captures de référence dans @formation/tests/captures/.
 ```
 
 Cf. /B8-capitaliser-et-documenter pour la doc mise à jour.
@@ -277,7 +278,7 @@ git push -u origin main
 ```
 
 ```text
-git push -u origin refactor/company-event
+git push -u origin 001-company-event-acme
 ```
 
 ### Hook pre-commit
